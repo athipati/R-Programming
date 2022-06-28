@@ -1,0 +1,163 @@
+---
+title: "Influence of Alcohol Consumption and Impact on Academic Performance"
+author: "Harikrishna Prathipati"
+date: "17/06/2022"
+output: 
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(knitr)
+library(formattable)
+library(ggplot2)
+library(tidyr)
+```
+
+## Summary
+The project's main aim involved examining the correlation between academic performance and alcohol consumption of students. Among students, alcohol has posed a significant problem associated with many negative consequences. According to Martinez et al. (2014), approximately 37.4% of students in the United States reported high alcohol consumption. Therefore, this project involved finding the association between the effects of alcohol on students' academic performance and alcohol consumption among students. Other negative consequences of students' alcohol consumption have also been examined in this project. From the analysis of variables for this project, it has been identified that there has been a negative correlation between the student's GPA and the frequency of alcohol consumption. It was clear from the analysis that with the increased number of nights per week that the students consumed alcohol, there was a decrease in the grade point average for these students. 
+
+## Introduction
+In most cases, it is during college that most students are allowed to make their own decisions. However, sometimes these decisions come in with alcohol consumption. In life, factors like social pressure, the easier availability of alcohol, social pressure, and independence are identified as the leading factors for alcohol consumption for students. Alcohol consumption has been identified as one of the largest parts of the culture regardless of whether the students decide to drink alcohol or not. The project has focused on the alcohol consumption impact on the student's academic performance. In most cases, it has been identified that students tend to indulge in alcohol consumption to cope with negative emotions or stress. However, no matter why the students decide to use alcohol, alcohol consumption is a serious problem, leading to failing classes and potential dropouts.
+
+## Literature Review
+Several studies have been conducted on the association between academic performance and students' number of nights of alcohol consumption. According to Matt et al. (2012), the authors were able to identify that as the number of nights for alcohol consumption increased, there was a significant decrease in the academic performance among students. In another study by Singleton & Wolfston (2009), the authors researched alcohol consumption among students and the negative impact on their academic performance. Their research concluded that students involved in high alcohol consumption have poor sleep patterns, which negatively affects their academic performance. In her study, Pizza-Gardener (2016) researched the relationship between alcohol consumption and GPA. From the research, the author identified that students with lower GPAs were involved in higher alcohol consumption than those with higher GPAs.
+The study by Liguori (2015) identified the correlation between student retention and alcohol consumption. From this study, it was identified that there was alcohol dependency, failure and dropouts, and academic impairment as some of the consequences associated with alcohol consumption. From the literature, there have been no statistically identified leading factors that lead to higher consumption of alcohol among students. Therefore, there is a need to develop this project. 
+The project now aims to implement the machine learning algorithms in R to test whether there is any correlation between the students' academic performance and the alcohol consumption among students. The project will also identify the main factors contributing to higher alcohol consumption among students.
+
+## Theory
+H1: There will be a significant relationship between frequent alcohol consumption among students and lower academic performance.
+H1: increased alcohol consumption contributes to a decrease in exam performance.
+
+## Data
+
+The data used for this project will be retrieved from https://www.kaggle.com/uciml/student-alcohol-consumption and it includes
+
+
+```{r echo=FALSE}
+student_data = read.csv("C:/Users/User/Downloads/student-mat.csv", header = T)
+#look at top 5 rows of data
+head(student_data)
+```
+
+To understand data and identify the variables which the project will be working on, the names of the variables have been display below. 
+
+```{r echo=FALSE}
+names(student_data)
+```
+
+Using dim()function, the size of the data was displayed.
+
+```{r}
+dim(student_data)
+```
+
+The dataset is made up of 395 records and 33 total variables. 
+
+```{r}
+colSums(is.na(student_data))
+```
+
+There are no missing values in the column. 
+
+
+## Methodology
+
+Having idenified that the data is clean, the next step was to work with the student_data and gain insights from the data regarding alcohol consumption among  students, the reasons for alcohol consumption, and effects of alcohol consumption on their academic performance. 
+
+First, the project checks the if alcohol consumption for the  student is influenced by the social-economic status and biological factors of the student. 
+```{r echo=FALSE}
+student_gender = student_data$sex 
+table(student_gender)
+
+```
+
+```{r echo=FALSE}
+barplot(table(student_gender))
+
+```
+
+It is clear that there are more female students in the data than male students. 
+
+```{r}
+studentage = student_data$age
+# convert studentage variable to a  numeric vector
+age_numeric = as.numeric(studentage) 
+```
+
+Once the age variable was converted to numeric vector, a histogram was created to illustrated the alcohol consumption among  students by age. 
+
+
+```{r echo=FALSE}
+# create a histogram for alcohol consumption frequencies by age
+hist(age_numeric, main = "Alcohol Consumption", xlab = "age")
+# calculate the mean age that consumes alcohol
+mean(age_numeric) 
+```
+
+Next, to identify if there was any correlation between exam performance and level of alcohol consumption for students, the project involved creating a number of boxplots.
+The first boxplot includes the distibution of scores for the first exam and level of alcohol consumption. 
+
+```{r echo=FALSE}
+boxplot(student_data$G1 ~ student_data$Walc, ylab = "Scores for First Exam", xlab = "Alcohol Consumption")
+```
+
+
+The second boxplot includes the distribution of scores for the second exam and level of alcohol consumption.
+
+```{r echo=FALSE}
+boxplot(student_data$G2 ~ student_data$Walc, ylab = "Scores for Second Exam", xlab = "Alcohol Consumption")
+```
+
+The third boxplot includes the distribution of the scores for the final exam and level of alcohol consumption for the  students. 
+
+```{r echo=FALSE}
+boxplot(student_data$G3 ~ student_data$Walc, ylab = "Scores for final exam", xlab = "Alcohol Consumption")
+```
+
+## Results
+Having performed analysis on the significant variables and identified the major research questions for the project in the dataset, there were a number of insights gained. 
+
+```{r echo=FALSE}
+female_age = age_numeric[student_data$sex == "F"]
+male_age = age_numeric[student_data$sex == "M"]
+par(mfrow = c(2,1))
+#a boxplot for female students
+boxplot(female_age,horizontal=T, col="light blue")  
+#a boxplot for male students
+boxplot(male_age,horizontal=T) 
+```
+
+
+The results for age and alcohol consumption illustrated that alcohol consumption is more among  students of age between 16-17. In addition, gender has been identified not to have a significant role on the influence of alcohol consumption among  students. 
+
+In regards to study time and alcohol consumption, results show that there is a very strong negative correlation. For example, there is the same value of 2 hours of study for 25th percentile, the median, and alcohol consumption of level 1, which is clear indication that 25% of students study for 2 hours and 50% of the students always study more than 2 hours. 
+
+```{r echo=FALSE}
+boxplot(student_data$studytime ~ student_data$Walc, xlab = "alcohol consumption", ylab = "study hours")
+
+```
+
+In regards to correlation between exam performance and alcohol consumption, it has been identified that increase in alcohol consumption has a negative correlation with the exam performance. By assumption, students who drink less have more time to study and the exam performance may be more affected by the study time.This assumption is supported by the boxpot below where it is clear that an increase in alcohol consumption significanly decreases the study time.  
+
+
+```{r echo=FALSE}
+boxplot(student_data$studytime ~ student_data$Walc, xlab = "alcohol consumption", ylab = "Study hours")
+```
+
+
+## Conclusion
+
+The theory that increased alcohol consumption contributes to decrease in the exam performance was true. There is some degree of correlation between small levels of alcohol consumption with improved exam scores. There is a decrease in exam scores with a high level of alcohol consumption. With high levels of alcohol consumption among students, it significantly harm their ability to perform. 
+
+
+
+# References
+
+Matt, R., Shannon, C. & Oliver, H. (2012). Does alcohol consumption affect academic performance? Retrieved from http://www.shannclark.weebly.com/uploads/2/5/1/4/25149157/the_effect_of_alcohol_consumption_on_academic_performance.pdf 
+
+Singleton, R. A., & Wolfson, A. R. (2009). Alcohol consumption, sleep, and academic performance among  students. Journal of studies on alcohol and drugs, 70(3), 355-363.
+
+Piazza-Gardner, A. K., Barry, A. E., & Merianos, A. L. (2016). Assessing drinking and academic performance among a nationally representative sample of  students. Journal of Drug Issues, 46(4), 347-353.
